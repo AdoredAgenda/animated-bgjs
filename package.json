@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Himanshu12102004/animated-bgjs.git"
+    "url": "git+https://github.com/AdoredAgenda/animated-bgjs.git"
   },
   "author": "Himanshu Gupta <himanshu12102004@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Himanshu12102004/animated-bgjs/issues"
+    "url": "https://github.com/AdoredAgenda/animated-bgjs.git/issues"
   },
-  "homepage": "https://github.com/Himanshu12102004/animated-bgjs#readme",
+  "homepage": "https://github.com/AdoredAgenda/animated-bgjs.git#readme",
   "devDependencies": {
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
