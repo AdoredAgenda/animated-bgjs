@@ -1,6 +1,6 @@
 {
   "name": "animated-bgjs",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "This npm library is a collection of animated backgrounds which you can use in your websites",
   "main": "index.js",
   "scripts": {
