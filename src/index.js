@@ -1,6 +1,6 @@
 const sin = require("./background_classes/sin");
 class AnimatedBg {
-  constructor(canvas, height, width, bgColor, increment) {
+  constructor(canvas, height, width, bgColor) {
     if (!(canvas instanceof HTMLCanvasElement)) {
       throw new Error("Expected a canvas element as the first argument");
     }
@@ -37,11 +37,14 @@ class AnimatedBg {
       );
     }
     this.canvas = canvas;
-    this.canvas.height = height;
-    this.canvas.width = width;
+    this.parent = this.canvas.parentElement;
+    this.isAnimationRunning = false;
+    this.canvas.height = this.parent.offsetHeight;
+    this.canvas.width = this.parent.offsetWidth;
     this.bgColor = bgColor;
     this.context;
-    this.increment = increment;
+    this.backgroundsArray = [];
+    this.increment = 0;
     this.frequency = 0.01;
   }
   init() {
@@ -52,8 +55,9 @@ class AnimatedBg {
 
     this.increment = 0;
   }
+
   // Trigger sinwave formation
-  sinWaveBg(
+  waveBg(
     maxAmplitude,
     wavelength,
     y_position,
@@ -76,12 +80,38 @@ class AnimatedBg {
 
     this.animate.bind(this)(sinObj);
   }
+  resizeHandler(self, backgroundsArray) {
+    self.canvas.height = this.parent.offsetHeight;
+    self.canvas.width = this.parent.offsetWidth;
+    this.context.fillStyle = `rgb(${this.bgColor.r},${this.bgColor.g},${this.bgColor.b})`;
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    backgroundsArray.forEach((elem) => {
+      elem.y_position = elem.y_percent * 0.01 * self.canvas.height;
+      if (elem.start_from_zero) elem.x_position = 0;
+      else {
+        elem.x_position = self.canvas.width;
+      }
+    });
+  }
   animate(obj) {
     const self = this; // Store the reference to the current context
     const object = obj;
+    // Resize
+
     self.increment = 0;
+    this.backgroundsArray.push(obj);
+    addEventListener(
+      "resize",
+      (self,
+      () => {
+        this.resizeHandler(self, this.backgroundsArray);
+      })
+    );
     function animationLoop() {
-      object.sinWave(self.increment);
+      self.backgroundsArray.forEach((background) => {
+        background.draw(self.increment);
+      });
 
       requestAnimationFrame(animationLoop);
       self.context.fillStyle = `rgba(${self.bgColor.r},${self.bgColor.g},${self.bgColor.b},0.03)`;
@@ -90,8 +120,10 @@ class AnimatedBg {
       self.context.fill();
       self.increment += object.frequency;
     }
-
-    animationLoop(); // Start the animation loop
+    if (!this.isAnimationRunning) {
+      this.isAnimationRunning = true;
+      animationLoop(); // Start the animation loop
+    }
   }
 }
 window.AnimatedBg = AnimatedBg;

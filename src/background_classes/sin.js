@@ -5,20 +5,26 @@ class Sin {
     canvas,
     maxAmplitude = 150,
     wavelength = 200,
-    y_position = this.canvas.height / 2,
     frequency = 0.017,
+    y_percent,
     angle = 0,
     color = { r: 0, g: 100, b: 100, a: 0.01 },
     start_from_zero = true
   ) {
-    (this.canvas = canvas),
-      (this.context = context),
-      (this.maxAmplitude = maxAmplitude),
-      (this.wavelength = wavelength),
-      (this.y_position = y_position - maxAmplitude / 2);
-    (this.frequency = frequency),
-      (this.angle = angle),
-      (this.start_from_zero = start_from_zero);
+    this.canvas = canvas;
+    this.context = context;
+    this.maxAmplitude = maxAmplitude;
+    this.wavelength = wavelength;
+    this.y_percent = y_percent;
+    this.y_position = y_percent * 0.01 * this.canvas.height;
+    this.frequency = frequency;
+    this.angle = angle;
+    if (this.angle >= 50) {
+      this.angle = 50;
+    } else if (this.angle <= -50) {
+      this.angle = -50;
+    }
+    this.start_from_zero = start_from_zero;
     this.x_position;
     this.color = color;
     if (start_from_zero) {
@@ -48,7 +54,7 @@ class Sin {
         Math.sin(increment)
     );
   }
-  sinWave(increment) {
+  draw(increment) {
     const x_position = this.canvas.width;
     const { r, g, b, a } = this.color;
     this.context.strokeStyle = `rgba(${r},${g},${b},${a})`;
